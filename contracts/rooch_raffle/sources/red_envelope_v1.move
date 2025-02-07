@@ -40,6 +40,10 @@ module rooch_raffle::red_envelope_v1_beta2 {
     const ErrorWrongAddNFTTime: u64 = 7;
     const ErrorNotBindedTwitter: u64 = 8;
     const ErrorTwitterAccountAlreadyClaimed: u64 = 9;
+    const ErrorEnvelopeAlreadyClosed: u64 = 10;
+    const ErrorEnvelopeAlreadyStarted: u64 = 11;
+    const ErrorEnvelopeNotOngoing: u64 = 12;
+    const ErrorWrongParams: u64 = 13;
 
 
     struct NFTEnvelope<phantom T: key+store> has key, store {
@@ -329,10 +333,54 @@ module rooch_raffle::red_envelope_v1_beta2 {
         let envelope = object::borrow_mut(envelope_obj);
         assert!(envelope.end_time < now_milliseconds(), ErrorWrongOpenTime);
         assert!(envelope.sender == sender(), ErrorNotSender);
+
+        recovery_coin_envelope_internal(envelope);
+    }
+
+    public entry fun update_coin_envelope<CoinType: key+store>(
+        envelope_obj: &mut Object<CoinEnvelope<CoinType>>,
+        name: String,
+        desc: String,
+        image_url: String,
+        theme_mode: u8,
+        color_mode: u8,
+        start_time: u64,
+        end_time: u64,
+        require_twitter_binding: bool
+    ) {
+        let envelope = object::borrow_mut(envelope_obj);
+        
+        assert!(envelope.sender == sender(), ErrorNotSender);
+        assert!(envelope.start_time > now_milliseconds(), ErrorEnvelopeAlreadyStarted);
+
+        envelope.meta.name = name;
+        envelope.meta.desc = desc;
+        envelope.meta.image_url = image_url;
+        envelope.meta.theme_mode = theme_mode;
+        envelope.meta.color_mode = color_mode;
+        envelope.start_time = start_time;
+        envelope.end_time = end_time;
+        envelope.require_twitter_binding = require_twitter_binding;
+    }
+
+    inline fun recovery_coin_envelope_internal<CoinType: key+store>(
+        envelope: &mut CoinEnvelope<CoinType>
+    ) {
         let claim_value = coin_store::balance(&envelope.coin_store);
         let reward_coin = coin_store::withdraw(&mut envelope.coin_store, claim_value);
         envelope.remaining_coin = coin_store::balance(&envelope.coin_store);
         account_coin_store::deposit(sender(), reward_coin);
+    }
+
+    entry fun extend_coin_envelope_end_time<CoinType: key+store>(
+        envelope_obj: &mut Object<CoinEnvelope<CoinType>>,
+        end_time: u64
+    ) {
+        let envelope = object::borrow_mut(envelope_obj);
+        assert!(envelope.sender == sender(), ErrorNotSender);
+        assert!(envelope.end_time < end_time, ErrorWrongParams);
+        assert!(envelope.start_time < now_milliseconds() && envelope.end_time > now_milliseconds(), ErrorEnvelopeNotOngoing);
+        envelope.end_time = end_time;
     }
 
     fun latest_block_height(): u64 {
