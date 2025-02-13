@@ -36,6 +36,7 @@ function formatMetadata(item: any) {
   const updatedAtTimestamp = get(item, 'updated_at');
   const createdAt = fromUnixTime(Number(createdAtTimestamp) / 1000);
   const updatedAt = fromUnixTime(Number(updatedAtTimestamp) / 1000);
+  const requireTwitterBinding = get(item, 'require_twitter_binding') as boolean;
 
   return {
     moduleName,
@@ -51,6 +52,7 @@ function formatMetadata(item: any) {
     endTime,
     createdAt,
     updatedAt,
+    requireTwitterBinding,
   };
 }
 
@@ -116,6 +118,7 @@ export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
     endTime,
     createdAt,
     updatedAt,
+    requireTwitterBinding,
   } = formatMetadata(item);
 
   const rawClaimType = get(item, 'decoded_value.value.claim_type') as number;
@@ -156,6 +159,7 @@ export function formatCoinEnvelopeData(item: any): CoinEnvelopeItem {
     status: formattedStatus,
     createdAt,
     updatedAt,
+    requireTwitterBinding,
   };
 }
 
