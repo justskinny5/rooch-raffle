@@ -11,6 +11,7 @@ async function getData(
   client: RoochClient,
   { tableHandleId, walletAddress }: { tableHandleId: string; walletAddress: string }
 ) {
+  console.log('getData', tableHandleId, walletAddress);
   const userTableQueryResult = await client.listStates({
     accessPath: `table/${tableHandleId}`,
     limit: '200',

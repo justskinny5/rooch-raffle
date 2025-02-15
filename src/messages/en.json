@@ -201,6 +201,15 @@
         "description": "This activity requires your Rooch address to be bound to Twitter before participation. Click the button below to redirect to the Rooch Portal page to bind your Twitter account.",
         "cancel": "Cancel",
         "confirm": "Bind Now"
+      },
+      "edit": {
+        "title": "Edit Activity",
+        "form": {
+          "validation": {
+            "nameRequired": "Activity name is required",
+            "endTimeInvalid": "End time cannot be earlier than start time"
+          }
+        }
       }
     },
     "raffle": {
@@ -260,6 +269,7 @@
     "manage": {
       "title": "Activity Management",
       "activityPage": "Activity Page",
+      "edit": "Edit Activity",
       "summary": "Summary",
       "details": "Details",
       "description": "Description",

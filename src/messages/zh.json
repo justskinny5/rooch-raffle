@@ -201,6 +201,15 @@
         "description": "该活动需要您的 Rooch 地址绑定 Twitter 后才能参与，点击下方的跳转按钮，前往 Rooch Portal 页面绑定您的 Twitter 账号。",
         "cancel": "取消",
         "confirm": "这就去"
+      },
+      "edit": {
+        "title": "编辑活动",
+        "form": {
+          "validation": {
+            "nameRequired": "活动名称不能为空",
+            "endTimeInvalid": "结束时间不能早于开始时间"
+          }
+        }
       }
     },
     "raffle": {
@@ -260,6 +269,7 @@
     "manage": {
       "title": "活动管理",
       "activityPage": "活动页面",
+      "edit": "编辑活动",
       "summary": "概览",
       "details": "详情",
       "description": "描述",

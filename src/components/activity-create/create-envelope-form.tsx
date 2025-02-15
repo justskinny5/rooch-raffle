@@ -40,6 +40,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Checkbox } from '@/components/ui/checkbox';
 import { getRandomCoverImageUrl } from '@/utils/kit';
 import { CoverImageDialog } from '../cover-image-dialog';
+import { useActivityImageUpload } from '@/hooks/use-activity-image-upload';
 
 interface FormValues {
   activityName: string;
@@ -193,20 +194,11 @@ export default function CreateEnvelopeForm() {
     },
   });
 
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.size <= 100 * 1024) {
-      // 限制文件大小不超过 100KB
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64String = event.target?.result as string;
-        setCoverImageUrl(base64String);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      alert(t('imageUpload.sizeLimit'));
-    }
-  };
+  const handleImageUpload = useActivityImageUpload({
+    onImageChange: setCoverImageUrl,
+    sizeLimit: 100,
+    alertMessage: t('imageUpload.sizeLimit'),
+  });
 
   const onSubmit = async (data: FormValues) => {
     if (submitStatus === 'success') {

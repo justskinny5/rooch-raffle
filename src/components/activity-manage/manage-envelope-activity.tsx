@@ -59,6 +59,18 @@ export function ManageEnvelopeActivity({ id }: ManageActivityProps) {
                 <h1 className="text-2xl font-bold leading-none">{envelopeDetail?.name}</h1>
                 <StatusCellContent status={envelopeDetail.status} />
               </div>
+
+              {/* TODO 直接变成编辑页面，不跳转 */}
+              {envelopeDetail.status === 'not-started' && (
+                  <Link
+                    href={`/activities/envelope/${id}/edit`}
+                    className="inline-flex cursor-pointer items-center justify-center rounded-md border-b border-transparent bg-gray-200/60 px-2.5 py-2 text-sm font-semibold leading-none text-gray-600 transition-all hover:bg-gray-600 hover:text-white"
+                  >
+                    <span>{t('activities.manage.edit')}</span>
+                    <ArrowUpRightIcon className="ml-1 h-3.5 w-3.5" />
+                  </Link>
+              )}
+
               <Link
                 href={`/activities/envelope/${id}`}
                 className="inline-flex cursor-pointer items-center justify-center rounded-md border-b border-transparent bg-gray-200/60 px-2.5 py-2 text-sm font-semibold leading-none text-gray-600 transition-all hover:bg-gray-600 hover:text-white"
